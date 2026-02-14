@@ -1,0 +1,14 @@
+{
+    "name": "libfuse",
+    "type": "module",
+    "version": "1.0.0",
+    "description": "A TypeScript declaration for the Fuse framework.",
+    "keywords": [
+        "fuse",
+        "declaration",
+        "typescript"
+    ],
+    "author": "Manchick",
+    "license": "Apache-2.0",
+    "packageManager": "pnpm@10.22.0"
+}
