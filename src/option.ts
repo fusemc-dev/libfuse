@@ -1,4 +1,4 @@
-import { Nominal } from "./common";
+import { Nominal } from "./util";
 
 export type Option<T> = Some<T> | None;
 export type Some<T> = Nominal<"Some", T>;

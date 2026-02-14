@@ -1,16 +1,22 @@
-import { Nominal, Digit, Letter } from "../common";
+import { Nominal, Digit, Letter, IsLiteral } from "../util";
 import { Some, None } from "../option";
 import { NormalizeIdentifier } from "../util/identifier";
 import { EventType, Lookup } from "./event_type";
 import { GuardType, LookupGuard, PlayerGuard } from "./guard";
 
-export type Selector<S extends string> =
-    ParseSelector<S> extends Some<infer _> ? S : never;
+export type ValidateSelector<S extends string> =
+    IsLiteral<S> extends true
+        ? ParseSelector<S> extends Some<infer _>
+            ? S
+            : never
+        : string;
 
 export type ParseSelector<S extends string> =
-    Lex<S> extends [Separator<"#">, infer Rest extends string]
-        ? ParseUnboundSelector<Rest>
-        : ParseBoundSelector<S>;
+    IsLiteral<S> extends true
+        ? Lex<S> extends [Separator<"#">, infer Rest extends string]
+            ? ParseUnboundSelector<Rest>
+            : ParseBoundSelector<S>
+        : Some<unknown>;
 
 type ParseBoundSelector<Source extends string> =
     Lex<Source> extends Some<

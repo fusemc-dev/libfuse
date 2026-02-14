@@ -1,4 +1,4 @@
-import { Nominal } from "../common";
+import { Nominal } from "../util";
 import { Some, None } from "../option";
 import { EventType, Join } from "./event_type";
 

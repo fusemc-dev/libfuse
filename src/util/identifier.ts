@@ -1,4 +1,4 @@
-import { Digit, LowerLetter } from "../common";
+import { Digit, IsLiteral, LowerLetter } from "../util";
 import { Some, None } from "../option";
 
 export abstract class Identifier {
@@ -10,23 +10,28 @@ export abstract class Identifier {
     abstract toString(): string;
 }
 
-type Test = NormalizeIdentifier<"join">;
+export type ValidateIdentifier<Source extends string> =
+    IsLiteral<Source> extends true
+        ? ParseIdentifier<Source> extends Some<infer _>
+            ? Source
+            : never
+        : string;
 
 export type NormalizeIdentifier<
-    S extends string,
+    Source extends string,
     DefaultNamespace extends string = "minecraft",
 > =
-    ParseIdentifier<S, DefaultNamespace> extends Some<
+    ParseIdentifier<Source, DefaultNamespace> extends Some<
         [infer Namespace extends string, infer Path extends string]
     >
         ? Some<`${Namespace}:${Path}`>
         : None;
 
 export type ParseIdentifier<
-    S extends string,
+    Source extends string,
     DefaultNamespace extends string = "minecraft",
 > =
-    ParseNamespace<S, "", DefaultNamespace> extends Some<
+    ParseNamespace<Source, "", DefaultNamespace> extends Some<
         [infer Namespace, infer Path extends string]
     >
         ? ParsePath<Path> extends infer Result
@@ -37,10 +42,10 @@ export type ParseIdentifier<
         : None;
 
 type ParseNamespace<
-    S extends string,
+    Source extends string,
     Namespace extends string = "",
     DefaultNamespace extends string = "minecraft",
-> = S extends `${infer Head}${infer Rest}`
+> = Source extends `${infer Head}${infer Rest}`
     ? Head extends ":"
         ? Some<[Namespace, Rest]>
         : Head extends "/"
@@ -51,10 +56,10 @@ type ParseNamespace<
     : Some<[DefaultNamespace, Namespace]>;
 
 type ParsePath<
-    S extends string,
+    Source extends string,
     Path extends string = "",
     Segment extends string = "",
-> = S extends `${infer Head}${infer Rest}`
+> = Source extends `${infer Head}${infer Rest}`
     ? Head extends "/"
         ? Segment extends ""
             ? None

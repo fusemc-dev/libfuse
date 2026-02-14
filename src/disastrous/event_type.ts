@@ -2,7 +2,7 @@ import { Some, None } from "../option";
 import { Player } from "../entity/living/player";
 import { Server } from "../server";
 import { NormalizeIdentifier } from "../util/identifier";
-import { Nominal } from "../common";
+import { Nominal } from "../util";
 
 export type Dispatch = {
     [E in Join | Load | Tick as E["identifier"]]: E;

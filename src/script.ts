@@ -1,3 +1,4 @@
 import { script } from "./libfuse";
 
-script.on("join[player('Manchick_')]", (player) => {});
+const myId = "join";
+script.on(myId, () => {});
