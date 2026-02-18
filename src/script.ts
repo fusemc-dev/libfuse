@@ -1,4 +1,5 @@
 import { script } from "./libfuse";
 
-const myId = "join";
-script.on(myId, () => {});
+script.on("join", (player) => {
+    player.inject("position", player.sample("velocity"));
+});
