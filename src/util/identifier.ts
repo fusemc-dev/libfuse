@@ -1,13 +1,17 @@
 import { Digit, IsLiteral, LowerLetter } from "../util";
 import { Some, None } from "../option";
+import { Serialize, Standardized } from "../serialization";
 
-export abstract class Identifier {
-    declare readonly namespace: string;
-    declare readonly path: string;
+export abstract class Identifier implements Iterable<string>, Standardized {
+    readonly namespace: string;
+    readonly path: string;
 
     private constructor() {}
 
+    abstract matches(other: Identifier | string): boolean;
     abstract toString(): string;
+    abstract [Symbol.iterator](): IterableIterator<string>;
+    abstract [Serialize](): never;
 }
 
 export type ValidateIdentifier<Source extends string> =
@@ -17,11 +21,21 @@ export type ValidateIdentifier<Source extends string> =
             : never
         : string;
 
+export type Lenient<
+    Source extends string,
+    Default extends string = "minecraft",
+> =
+    ParseIdentifier<Source, Default> extends Some<
+        [infer Namespace extends string, infer Path extends string]
+    >
+        ? `${Namespace}:${Path}` | `${Path}`
+        : never;
+
 export type NormalizeIdentifier<
     Source extends string,
-    DefaultNamespace extends string = "minecraft",
+    Default extends string = "minecraft",
 > =
-    ParseIdentifier<Source, DefaultNamespace> extends Some<
+    ParseIdentifier<Source, Default> extends Some<
         [infer Namespace extends string, infer Path extends string]
     >
         ? Some<`${Namespace}:${Path}`>
@@ -29,9 +43,9 @@ export type NormalizeIdentifier<
 
 export type ParseIdentifier<
     Source extends string,
-    DefaultNamespace extends string = "minecraft",
+    Default extends string = "minecraft",
 > =
-    ParseNamespace<Source, "", DefaultNamespace> extends Some<
+    ParseNamespace<Source, "", Default> extends Some<
         [infer Namespace, infer Path extends string]
     >
         ? ParsePath<Path> extends infer Result
@@ -44,16 +58,16 @@ export type ParseIdentifier<
 type ParseNamespace<
     Source extends string,
     Namespace extends string = "",
-    DefaultNamespace extends string = "minecraft",
+    Default extends string = "minecraft",
 > = Source extends `${infer Head}${infer Rest}`
     ? Head extends ":"
         ? Some<[Namespace, Rest]>
         : Head extends "/"
-          ? Some<[DefaultNamespace, `${Namespace}/${Rest}`]>
+          ? Some<[Default, `${Namespace}/${Rest}`]>
           : Head extends LowerLetter | Digit | "_" | "-"
-            ? ParseNamespace<Rest, `${Namespace}${Head}`, DefaultNamespace>
+            ? ParseNamespace<Rest, `${Namespace}${Head}`, Default>
             : None
-    : Some<[DefaultNamespace, Namespace]>;
+    : Some<[Default, Namespace]>;
 
 type ParsePath<
     Source extends string,

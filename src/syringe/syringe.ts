@@ -2,7 +2,7 @@ import { IsLiteral, Nominal } from "../util";
 import { None, Some } from "../option";
 import { Text } from "../util/typography";
 import { NormalizeIdentifier } from "../util/identifier";
-import { Vector } from "../util/vector";
+import { Vec2, Vec3 } from "../math";
 
 type Dispatch = {
     [V in
@@ -51,12 +51,12 @@ export type Fire = NormalizedVaccine<"fire", number>;
 export type Glowing = NormalizedVaccine<"glowing", boolean>;
 export type HasVisualFire = NormalizedVaccine<"has_visual_fire", boolean>;
 export type Invulnerable = NormalizedVaccine<"invulnerable", boolean>;
-export type Velocity = NormalizedVaccine<"velocity", Vector>;
+export type Velocity = NormalizedVaccine<"velocity", Vec3>;
 export type Gravity = NormalizedVaccine<"gravity", boolean>;
 export type OnGround = NormalizedVaccine<"on_ground", boolean>;
 export type PortalCooldown = NormalizedVaccine<"portal_cooldown", number>;
-export type Position = NormalizedVaccine<"position", Vector>;
-export type Rotation = NormalizedVaccine<"rotation", [number, number]>;
+export type Position = NormalizedVaccine<"position", Vec3>;
+export type Rotation = NormalizedVaccine<"rotation", Vec2>;
 export type Silent = NormalizedVaccine<"silent", boolean>;
 export type Tags = NormalizedVaccine<"tags", string[]>;
 export type TicksFrozen = NormalizedVaccine<"ticks_frozen", number>;

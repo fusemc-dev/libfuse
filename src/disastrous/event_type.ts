@@ -1,6 +1,6 @@
 import { Some, None } from "../option";
 import { Player } from "../entity/living/player";
-import { Server } from "../server";
+import { Server } from "../world/server";
 import { NormalizeIdentifier } from "../util/identifier";
 import { Nominal } from "../util";
 

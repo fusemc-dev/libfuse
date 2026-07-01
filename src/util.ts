@@ -1,6 +1,6 @@
-export declare const __brand: unique symbol;
+export declare const Name: unique symbol;
+export type Nominal<Name extends string, T> = { readonly [Name]: Name } & T;
 
-export type Nominal<Name extends string, T> = { readonly [__brand]: Name } & T;
 export type IsLiteral<A extends string> = string extends A ? false : true;
 
 // prettier-ignore
@@ -27,3 +27,11 @@ export type LowerLetter =
 
 export type UpperLetter = Uppercase<LowerLetter>;
 export type Letter = LowerLetter | UpperLetter;
+
+export type Widen<T> = T extends string
+    ? string
+    : T extends number
+      ? number
+      : T extends boolean
+        ? boolean
+        : T;

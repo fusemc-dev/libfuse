@@ -1,5 +1,5 @@
-import { script } from "./libfuse";
+import { script, io } from "./libfuse";
 
 script.on("join", (player) => {
-    player.inject("position", player.sample("velocity"));
-});
+    io.log(`${player} has joined the world.`);
+})
